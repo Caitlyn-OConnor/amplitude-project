@@ -17,9 +17,9 @@ A Python script designed to export data from the **Amplitude Analytics** platfor
 
 1. **Authentication:** Loads `AMP_API_KEY` and `AMP_SECRET_KEY`.
 2. **API Request:** Calls the Amplitude API with a defined start and end datetime.
-3. **Validation:** * **Success (200):** Creates a `data/` folder and saves the response as a timestamped `.zip`.
-* **Server Error (5xx):** Triggers the retry mechanism, with up to 3 attempts to account for server outages.
-* **Client Error (4xx):** Prevents unnecessary API calls on user error.
+3. **Validation:** If the API call was successful (200): Creates a `data/` folder and saves the response as a timestamped `.zip`.
+    * **Server Error (5xx):** Triggers the retry mechanism, with up to 3 attempts to account for server outages.
+    * **Client Error (4xx):** Prevents unnecessary API calls on user error.
 
 ---
 
