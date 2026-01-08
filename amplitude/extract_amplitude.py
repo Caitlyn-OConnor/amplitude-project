@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime
 import time
-from pathlib import Path  
+
 
 load_dotenv()
 
@@ -28,7 +28,8 @@ while attempt <= max_attempts:
     if response.status_code == 200: #if api call successful
         try:
             # 1. Create directory if it doesn't exist
-            Path("data").mkdir(exist_ok=True)
+            data_dir = "data"
+            os.makedirs(data_dir, exist_ok=True)
             
             # 2. Define filename with .zip extension using time of api call
             filename = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
