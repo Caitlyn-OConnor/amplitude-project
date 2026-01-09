@@ -84,5 +84,5 @@ while attempt <= max_attempts:
 
 if attempt > max_attempts:
     print("Maximum attempts reached. Download failed.")
-
+    logger.error(response.reason)
 
