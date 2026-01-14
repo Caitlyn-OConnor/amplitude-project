@@ -1,6 +1,9 @@
 import os    
 import gzip        
 import shutil 
+import logging
+
+logger = logging.getLogger() 
 
 def gunzip_function(extract_pathbase, extractgz_pathbase):
     '''
@@ -10,9 +13,10 @@ def gunzip_function(extract_pathbase, extractgz_pathbase):
     :param extractgz_pathbase: where the final extracted jsons are loaded into = ideally 'data'
     :param zip_data_dir: where the zip files are saved from the api call = ideally 'zipdata'
     '''
+    logger.info("Decompressing .gz files...")
     # Ensure the output directory exists before writing to it
     os.makedirs(extractgz_pathbase, exist_ok=True)
-    
+
     # First go one level into the folder by getting the result of what is in the base folder
     extract_subfolder = os.listdir(extract_pathbase)[0]
     # if you wanted to not assume you only get one subfolder, you would loop through all the subfolders like:
@@ -36,4 +40,5 @@ def gunzip_function(extract_pathbase, extractgz_pathbase):
         output_path = os.path.join(extractgz_pathbase, output_filename) # construct desired output path
         with gzip.open(filepath, 'rb') as gz_file, open(output_path, 'wb') as out_file:
             shutil.copyfileobj(gz_file, out_file)
-
+    
+    logger.info(f"Successfully decompressed files to {extractgz_pathbase}")

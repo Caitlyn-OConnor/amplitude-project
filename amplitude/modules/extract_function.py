@@ -27,6 +27,7 @@ def extract_function(url, params ,max_attempts, timestamp, api_key, secret_key, 
 
     while attempt <= max_attempts:
         print(f"Attempt {attempt}...")
+        logger.info(f"Attempt {attempt} for Amplitude export...")
         response = requests.get(url, params=params, auth=(api_key, secret_key), timeout = 45)
 
         if response.status_code == 200: #if api call successful
@@ -50,8 +51,8 @@ def extract_function(url, params ,max_attempts, timestamp, api_key, secret_key, 
                
                 unzip_function(zip_data_dir, extract_pathbase)
                 gunzip_function(extract_pathbase, extractgz_pathbase, zip_data_dir)
-               
-
+                
+                logger.info(f"Zip file saved successfully: {filepath}")
                 break  # Exit loop on success of zip saving
 
             except Exception as e:
