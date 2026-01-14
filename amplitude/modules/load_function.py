@@ -1,7 +1,9 @@
 # Load libraries
 import boto3
 import os
+import logging
 
+logger = logging.getLogger() 
 
 def load_function(extractgz_pathbase, aws_bucket_name, s3_client):
     '''
@@ -12,6 +14,7 @@ def load_function(extractgz_pathbase, aws_bucket_name, s3_client):
     '''
     if not os.path.exists(extractgz_pathbase):
         print(f"Directory {extractgz_pathbase} does not exist. Skipping upload.")
+        logger.warning("No JSON files found to upload.")
         return
 
     json_files = [f for f in os.listdir(extractgz_pathbase) if f.endswith('.json')]
@@ -30,9 +33,11 @@ def load_function(extractgz_pathbase, aws_bucket_name, s3_client):
                 # Delete local file AFTER successful upload
                 os.remove(local_file_path) 
                 print(f'Successfully uploaded and removed {file} :)')
+                logger.info(f"Successfully uploaded {file} to S3.")
 
             except Exception as e:
                 print(f'Upload error for {file}: {e}')
     else:
         # This runs if json_files is empty
         print('No JSON files found in the directory. Nothing to upload.')
+        logger.error(f"Failed to upload {file}: {str(e)}")
