@@ -1,5 +1,3 @@
-# Single JSON file upload to S3 with KMS key
-
 # Load libraries
 import boto3
 import os
@@ -16,10 +14,18 @@ aws_bucket_name=os.getenv('AWS_BUCKET_NAME')
 # defining directory where the jsons are found
 filepath = 'data'
 
-# 1. Create a session using your specific profile name
-session = boto3.Session(profile_name='amplitude_test') 
-# 2. Create an S3 client from that session 
-s3 = session.client('s3')
+# Create a session using your specific profile name
+# session = boto3.Session(profile_name='amplitude_test') 
+# # Create an S3 client from that session 
+# s3 = session.client('s3')
+
+# Create S3 Client using AWS Credentials
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id=aws_access_key,
+    aws_secret_access_key=aws_secret_key
+)
+
 
 # get a list of jsons in data directory
 json_files = [f for f in os.listdir(filepath) if f.endswith('.json')]
@@ -34,7 +40,7 @@ if json_files:
         
         try:
             # Upload to S3
-            s3.upload_file(local_file_path, aws_bucket_name, aws_file_destination)
+            s3_client.upload_file(local_file_path, aws_bucket_name, aws_file_destination)
             
             # Delete local file AFTER successful upload
             os.remove(local_file_path) 

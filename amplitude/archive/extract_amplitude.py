@@ -2,13 +2,13 @@
 import requests
 from dotenv import load_dotenv
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 import logging        
 import zipfile     
 import gzip        
 import shutil     
-import tempfile    
+
 
 logs_dir = 'logs'
 filename = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
@@ -35,10 +35,14 @@ logger = logging.getLogger()
 
 load_dotenv()
 
+today_midnight = datetime.now()
+last_week_midnight = today_midnight - timedelta(days=7)
+
+
 url = 'https://analytics.eu.amplitude.com/api/2/export'
 params = {
-    'start': '20260101T00',
-    'end': '20260108T00'
+    'start': last_week_midnight.strftime('%Y%m%dT%H'),
+    'end': today_midnight.strftime('%Y%m%dT%H')
 }
 
 api_key = os.getenv("AMP_API_KEY")
@@ -50,7 +54,7 @@ attempt = 0
 
 while attempt <= max_attempts:
     print(f"Attempt {attempt}...")
-    response = requests.get(url, params=params, auth=(api_key, secret_key))
+    response = requests.get(url, params=params, auth=(api_key, secret_key), timeout = 45)
 
     if response.status_code == 200: #if api call successful
         try:
@@ -63,12 +67,11 @@ while attempt <= max_attempts:
             filepath = f'zipdata/{filename}.zip'
 
             extract_pathbase = 'extractzip'
-            if not os.path.exists(extract_pathbase):
-                os.mkdir(extract_pathbase)
+            os.makekdirs(extract_pathbase, exist_ok=True)
 
             extractgz_pathbase = 'data'
-            if not os.path.exists(extractgz_pathbase):
-                os.mkdir(extractgz_pathbase)
+            os.makekdirs(extractgz_pathbase, exist_ok=True)
+
 
             # 3. Write binary content ('wb') to the file, save the zip files
             with open(filepath, 'wb') as file:
