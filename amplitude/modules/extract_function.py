@@ -1,15 +1,14 @@
 # Load environment variables
 import requests
-from dotenv import load_dotenv
 import os
-from datetime import datetime, timedelta
 import time
 import logging           
 from modules.gunzip_function import gunzip_function
 from modules.unzip_function import unzip_function
 
+logger = logging.getLogger()
 
-def extract_function(url, params ,max_attempts, filename, api_key, secret_key, zip_data_dir, extract_pathbase, extractgz_pathbase):
+def extract_function(url, params ,max_attempts, timestamp, api_key, secret_key, zip_data_dir, extract_pathbase, extractgz_pathbase):
     '''
     Docstring for extract_function
     
@@ -34,13 +33,12 @@ def extract_function(url, params ,max_attempts, filename, api_key, secret_key, z
             try:
                 # 1. Create directory if it doesn't exist
                 os.makedirs(zip_data_dir, exist_ok=True)
-                
                 # 2. Define filename with .zip extension using time of api call
-                filepath = f'zipdata/{filename}.zip'
+                filepath = os.path.join(zip_data_dir, f'{timestamp}.zip')
 
 
-                os.makekdirs(extract_pathbase, exist_ok=True)
-                os.makekdirs(extractgz_pathbase, exist_ok=True)
+                os.makedirs(extract_pathbase, exist_ok=True)
+                os.makedirs(extractgz_pathbase, exist_ok=True)
 
 
                 # 3. Write binary content ('wb') to the file, save the zip files

@@ -2,7 +2,7 @@ import os
 import gzip        
 import shutil 
 
-def gunzip_function(extract_pathbase, extractgz_pathbase, zip_data_dir):
+def gunzip_function(extract_pathbase, extractgz_pathbase):
     '''
     Docstring for gunzip_function
     
@@ -10,7 +10,9 @@ def gunzip_function(extract_pathbase, extractgz_pathbase, zip_data_dir):
     :param extractgz_pathbase: where the final extracted jsons are loaded into = ideally 'data'
     :param zip_data_dir: where the zip files are saved from the api call = ideally 'zipdata'
     '''
-
+    # Ensure the output directory exists before writing to it
+    os.makedirs(extractgz_pathbase, exist_ok=True)
+    
     # First go one level into the folder by getting the result of what is in the base folder
     extract_subfolder = os.listdir(extract_pathbase)[0]
     # if you wanted to not assume you only get one subfolder, you would loop through all the subfolders like:
@@ -35,6 +37,3 @@ def gunzip_function(extract_pathbase, extractgz_pathbase, zip_data_dir):
         with gzip.open(filepath, 'rb') as gz_file, open(output_path, 'wb') as out_file:
             shutil.copyfileobj(gz_file, out_file)
 
-    # Cleaning up file directories
-    shutil.rmtree(extract_pathbase) 
-    shutil.rmtree(zip_data_dir)

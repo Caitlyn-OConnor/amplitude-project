@@ -10,6 +10,9 @@ def load_function(extractgz_pathbase, aws_bucket_name, s3_client):
     :param extractgz_pathbase: Description
     :param aws_bucket_name: Description
     '''
+    if not os.path.exists(extractgz_pathbase):
+        print(f"Directory {extractgz_pathbase} does not exist. Skipping upload.")
+        return
 
     json_files = [f for f in os.listdir(extractgz_pathbase) if f.endswith('.json')]
 
