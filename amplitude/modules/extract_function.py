@@ -50,7 +50,7 @@ def extract_function(url, params ,max_attempts, timestamp, api_key, secret_key, 
 
                
                 unzip_function(zip_data_dir, extract_pathbase)
-                gunzip_function(extract_pathbase, extractgz_pathbase, zip_data_dir)
+                gunzip_function(extract_pathbase, extractgz_pathbase)
                 
                 logger.info(f"Zip file saved successfully: {filepath}")
                 break  # Exit loop on success of zip saving
